@@ -6,17 +6,14 @@ from k8s import K8s
 app = FastAPI()
 k8s = K8s()
 
-@app.get("/")
-async def get_all_status():
-    return {"message": "All questDB instances"}
+
+@app.get("/{namespace}/{name}")
+async def get_status_by_name(namespace: str, name: str):
+    sts = k8s.get_status(namespace, name)
+    return {"status": {sts}}
 
 
-@app.get("/{name}")
-async def get_status_by_name(name: str):
-    return {"message": f"Status {name}"}
-
-
-@app.delete("/{name}")
+@app.delete("/{namespace}/{name}")
 async def delete(name: str):
     return {"message": f"Deleted {name}"}
 

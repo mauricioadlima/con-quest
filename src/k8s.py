@@ -2,6 +2,7 @@ from kubernetes import client, config
 from questdb import QuestDB
 from os import path
 import yaml
+from pprint import pprint
 
 
 class K8s:
@@ -21,4 +22,9 @@ class K8s:
             stateful_set['metadata']['name'] = questdb.name
             k8s_apps_v1 = client.AppsV1Api()
             k8s_apps_v1.create_namespaced_stateful_set(
-                body=stateful_set, namespace=self.__get_namespace(questdb), pretty=True)
+                body=stateful_set, namespace=self.__get_namespace(questdb))
+
+    def get_status(self, namespace: str, name: str):
+        k8s_apps_v1 = client.AppsV1Api()
+        resp = k8s_apps_v1.read_namespaced_stateful_set_status(name, namespace)
+        return 'OK' if resp.status.replicas == resp.status.ready_replicas else 'NOK'
