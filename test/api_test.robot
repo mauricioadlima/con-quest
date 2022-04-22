@@ -11,16 +11,25 @@ ${URL}            http://${HOST}:${PORT}
 ${DEFAULT_NS}     tmp
 ${DEFAULT_NAME}   test
 
+*** Keywords ***
+Get Status
+    ${resp}=                      GET      ${URL}/${DEFAULT_NS}/${DEFAULT_NAME}
+    Status Should Be              200      ${resp}
+    Should Be Equal As Strings    ['OK']   ${resp.json()["status"]}
+
 *** Test Cases ***
-Create new QuestDB instance
-    &{data}=            Create dictionary  name=${DEFAULT_NAME}   namespace=${DEFAULT_NS}
-    ${resp}=            POST  ${URL}  json=${data}
-    Status Should Be    200    ${resp}
+Should test creating a questdb instance
+    &{data}=            Create dictionary   name=${DEFAULT_NAME}   namespace=${DEFAULT_NS}
+    ${resp}=            POST                ${URL}                 json=${data}
+    Status Should Be    200                 ${resp}
 
-Get a QuestDB status by name
-    ${resp}=                    GET                         ${URL}/${DEFAULT_NS}/${DEFAULT_NAME}
-    Status Should Be            200                         ${resp}
-    Should Be Equal As Strings  ['OK']                      ${resp.json()["status"]}
 
-Delete a QuestDB instance
-    DELETE  ${URL}/${DEFAULT_NS}/${DEFAULT_NAME}
+Should test the return status of a questdb instance
+    Wait Until Keyword Succeeds   10x
+    ...                           1s
+    ...                           Get Status
+
+
+Should test deleting a questdb instance
+    ${resp}=            DELETE  ${URL}/${DEFAULT_NS}/${DEFAULT_NAME}
+    Status Should Be    200     ${resp}
