@@ -19,5 +19,6 @@ Delete a QuestDB instance
     DELETE  ${URL}/my-personal-db
 
 Create new QuestDB instance
-    &{data}=    Create dictionary  name=test
-    POST  ${URL}  json=${data}
+    &{data}=            Create dictionary  name=test  namespace=tmp
+    ${resp}=            POST  ${URL}  json=${data}
+    Status Should Be    200    ${resp}

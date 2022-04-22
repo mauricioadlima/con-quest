@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: questdb
+  labels:
+    app.kubernetes.io/name: questdb
+    app.kubernetes.io/instance: questdb-instance
+    app.kubernetes.io/version: "6.2.1"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: questdb
+      app.kubernetes.io/instance: questdb-instance
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: questdb
+        app.kubernetes.io/instance: questdb-instance
+    spec:
+      containers:
+        - name: questdb
+          image: "questdb/questdb:6.2.1"
+          imagePullPolicy: IfNotPresent
+
+          ports:
+            - name: http
+              containerPort: 9000
+              protocol: TCP
+            - name: postgresql
+              containerPort: 8812
+              protocol: TCP
+            - name: influxdb
+              containerPort: 9009
+              protocol: TCP

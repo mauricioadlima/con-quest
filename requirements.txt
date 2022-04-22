@@ -1,5 +1,8 @@
 requests
-fastapi
+fastapi~=0.75.2
 uvicorn
+kubernetes==21.7.0
 robotframework
 robotframework-requests
+PyYAML~=6.0
+pydantic~=1.9.0
