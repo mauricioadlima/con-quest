@@ -1,3 +1,4 @@
 *.html
 *.xml
 .idea/
+.src/__pycache__
